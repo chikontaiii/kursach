@@ -5,6 +5,7 @@
 
     const MENU = [
         { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '📊', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '👤', roles: ['starosta'] },
         { id: 'students', path: '#/students', label: 'Студенты', icon: '👨‍🎓', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'grades', path: '#/grades', label: 'Оценки', icon: '📝', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '📚', roles: ['admin', 'teacher', 'starosta'] },
@@ -15,7 +16,8 @@
     ];
 
     const ROUTES = {
-        dashboard: { title: 'Dashboard', subtitle: 'Обзор успеваемости', render: (c) => DashboardPage.render(c) },
+        dashboard: { title: 'Dashboard', subtitle: 'Обзор успеваемости группы', render: (c) => DashboardPage.render(c) },
+        my: { title: 'Мой профиль', subtitle: 'Личные показатели успеваемости', render: (c) => DashboardPage.renderStudentView(c, Store.getCurrentUser()) },
         students: { title: 'Студенты', subtitle: 'Список всех студентов', render: (c) => StudentsPage.render(c) },
         student: { title: 'Профиль студента', subtitle: 'Детальная информация', render: (c, id) => StudentPage.render(c, id) },
         grades: { title: 'Оценки', subtitle: 'Журнал оценок', render: (c) => GradesPage.render(c) },
@@ -104,7 +106,6 @@
         matchBox.innerHTML = '';
         matchedStudent = null;
 
-        // Живой поиск
         input.oninput = () => {
             const q = input.value.trim().toLowerCase();
             matchedStudent = null;
@@ -152,13 +153,11 @@
             });
         };
 
-        // Отмена
         $('#regCancel').onclick = async() => {
             try { await FirebaseService.signOut(); } catch (e) {}
             showLogin();
         };
 
-        // Продолжить
         $('#regConfirm').onclick = () => {
             const name = input.value.trim();
             if (!name || name.length < 3) {
@@ -207,7 +206,6 @@
             enterApp(user);
         };
 
-        // Enter = Продолжить
         input.onkeydown = (e) => {
             if (e.key === 'Enter') $('#regConfirm').click();
         };
