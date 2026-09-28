@@ -55,19 +55,19 @@
             </div>
 
             <p style="font-size:13.5px;color:var(--text-2);margin:0 0 18px;line-height:1.5">
-                Выберите себя из списка — система свяжет ваш Google-аккаунт с вашей записью в журнале.
+                Введите своё ФИО. Если вы уже есть в списке — система найдёт вас автоматически, иначе создаст новый профиль.
             </p>
 
             <label class="field">
-                <span class="field__label">Я — студент</span>
-                <select class="select" id="regStudentSelect">
-                    <option value="">— выберите себя —</option>
-                </select>
+                <span class="field__label">ФИО</span>
+                <input class="input" id="regName" type="text" placeholder="Например: Иванов Иван" autocomplete="name">
             </label>
 
-            <div style="display:flex;gap:8px;margin-top:18px">
+            <div id="regMatch" style="margin-top:12px"></div>
+
+            <div style="display:flex;gap:8px;margin-top:20px">
                 <button class="btn btn--ghost" id="regCancel" type="button">Отмена</button>
-                <button class="btn btn--primary" id="regConfirm" type="button" style="flex:1">Подтвердить</button>
+                <button class="btn btn--primary" id="regConfirm" type="button" style="flex:1">Продолжить</button>
             </div>
         </div>
     </div>

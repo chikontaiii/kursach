@@ -56,6 +56,7 @@
         app.hidden = false;
     };
 
+    /* ---------------- Обработка Google-пользователя ---------------- */
     const handleFirebaseUser = (fbUser) => {
         if (!fbUser) {
             Store.logout();
@@ -65,6 +66,7 @@
             return;
         }
 
+        // 1) Уже привязан — сразу входим
         const mapping = Store.getMapping(fbUser.uid);
         if (mapping) {
             const user = Store.upsertUser({
@@ -77,6 +79,7 @@
             return;
         }
 
+        // 2) Админ/преподаватель по email — автологин
         const autoRole = FirebaseService.roleForEmail(fbUser.email);
         if (autoRole) {
             const name = fbUser.displayName || fbUser.email;
@@ -87,45 +90,119 @@
             return;
         }
 
+        // 3) Первый раз — регистрация (ввод ФИО)
         openRegistration(fbUser);
     };
 
+    /* ---------------- Регистрация ---------------- */
     const openRegistration = (fbUser) => {
         showRegister();
         $('#regEmail').textContent = fbUser.email || '';
 
-        const select = $('#regStudentSelect');
-        const students = Store.getStudents();
-        select.innerHTML = '<option value="">— выберите себя —</option>' +
-            students.map(s =>
-                '<option value="' + s.id + '">' + Utils.escapeHtml(s.fullName) + ' (' + Utils.escapeHtml(s.group) + ')</option>'
-            ).join('');
+        const input = $('#regName');
+        const matchBox = $('#regMatch');
+        let matchedStudent = null;
 
+        input.value = '';
+        matchBox.innerHTML = '';
+        matchedStudent = null;
+
+        // Живой поиск по мере ввода
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            matchedStudent = null;
+
+            if (q.length < 2) {
+                matchBox.innerHTML = '';
+                return;
+            }
+
+            const matches = Store.getStudents()
+                .filter(s => s.fullName.toLowerCase().indexOf(q) !== -1)
+                .slice(0, 5);
+
+            if (matches.length === 0) {
+                matchBox.innerHTML =
+                    '<div class="insight" style="padding:10px 12px;font-size:12.5px">' +
+                    '<div class="insight__icon">+</div>' +
+                    '<div>Совпадений нет. Будет создан <b>новый профиль</b> в группе ПКС-7-24.</div>' +
+                    '</div>';
+                return;
+            }
+
+            matchBox.innerHTML =
+                '<div style="font-size:12px;color:var(--text-3);margin:0 0 8px">' +
+                'Найдены совпадения — нажмите, если это вы:' +
+                '</div>' +
+                matches.map(s =>
+                    '<button type="button" class="demo-btn" data-id="' + s.id + '" style="width:100%;margin-bottom:6px">' +
+                    '<span>' + Utils.escapeHtml(s.fullName) + '</span>' +
+                    '<span class="demo-btn__role">' + Utils.escapeHtml(s.group) + '</span>' +
+                    '</button>'
+                ).join('');
+
+            matchBox.querySelectorAll('[data-id]').forEach(btn => {
+                btn.onclick = () => {
+                    matchedStudent = Store.getStudent(btn.dataset.id);
+                    input.value = matchedStudent.fullName;
+                    matchBox.innerHTML =
+                        '<div class="insight insight--good">' +
+                        '<div class="insight__icon">✓</div>' +
+                        '<div>Вы выбрали: <b>' + Utils.escapeHtml(matchedStudent.fullName) + '</b> (' +
+                        Utils.escapeHtml(matchedStudent.group) + ')</div>' +
+                        '</div>';
+                };
+            });
+        });
+
+        // Отмена — выходим из Firebase
         $('#regCancel').onclick = async() => {
             try { await FirebaseService.signOut(); } catch (e) {}
             showLogin();
         };
 
+        // Подтверждение
         $('#regConfirm').onclick = () => {
-            const studentId = select.value;
-            if (!studentId) { Utils.toast('Выберите себя из списка', 'warn'); return; }
-            const student = Store.getStudent(studentId);
-            if (!student) { Utils.toast('Студент не найден', 'error'); return; }
+            const name = input.value.trim();
+            if (!name || name.length < 3) {
+                Utils.toast('Введите ваше ФИО полностью', 'warn');
+                return;
+            }
 
-            // ★ Если студент — староста, даём ему роль starosta
+            let student = matchedStudent;
+
+            // Если не выбрали из подсказок — пробуем точное совпадение
+            if (!student) {
+                student = Store.getStudents().find(s =>
+                    s.fullName.toLowerCase() === name.toLowerCase()
+                );
+            }
+
+            // Если и его нет — создаём нового студента
+            if (!student) {
+                student = Store.addStudent({
+                    fullName: name,
+                    group: 'ПКС-7-24',
+                    course: 2,
+                    specialty: 'Техники-программисты',
+                    isStarosta: false
+                });
+                Utils.toast('Создан новый профиль студента', 'info');
+            }
+
             const role = student.isStarosta ? 'starosta' : 'student';
 
             const user = Store.upsertUser({
                 name: student.fullName,
                 email: fbUser.email,
                 role: role,
-                studentId: studentId
+                studentId: student.id
             });
 
             Store.setUserMapping(fbUser.uid, {
                 name: student.fullName,
                 role: role,
-                studentId: studentId
+                studentId: student.id
             });
 
             const greeting = role === 'starosta' ?
@@ -134,8 +211,16 @@
             Utils.toast(greeting, 'success');
             enterApp(user);
         };
+
+        // Enter = подтвердить
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') $('#regConfirm').click();
+        });
+
+        setTimeout(() => input.focus(), 100);
     };
 
+    /* ---------------- Выход ---------------- */
     $('#logoutBtn').addEventListener('click', async() => {
         const ok = await Utils.confirmDialog({
             title: 'Выйти из аккаунта?',
@@ -156,6 +241,7 @@
         }
     });
 
+    /* ---------------- Навигация ---------------- */
     const buildNav = (user) => {
         const items = MENU.filter(m => m.roles.indexOf(user.role) !== -1);
         nav.innerHTML = items.map(m =>
@@ -179,14 +265,10 @@
         });
     };
 
-    const openSidebar = () => {
-        sidebar.classList.add('sidebar--open');
-        overlay.classList.add('overlay--on');
-    };
-    const closeSidebar = () => {
-        sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('overlay--on');
-    };
+    const openSidebar = () => { sidebar.classList.add('sidebar--open');
+        overlay.classList.add('overlay--on'); };
+    const closeSidebar = () => { sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('overlay--on'); };
     burger.addEventListener('click', openSidebar);
     overlay.addEventListener('click', closeSidebar);
     window.addEventListener('resize', () => { if (window.innerWidth > 860) closeSidebar(); });
@@ -206,6 +288,7 @@
             '</div>';
     };
 
+    /* ---------------- Роутер ---------------- */
     const parseHash = () => {
         const raw = (location.hash || '#/dashboard').slice(2);
         const parts = raw.split('/').filter(Boolean);
@@ -260,6 +343,7 @@
         renderRoute();
     };
 
+    /* ---------------- Инициализация ---------------- */
     const init = () => {
         Store.load();
 
