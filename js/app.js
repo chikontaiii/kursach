@@ -4,15 +4,15 @@
 (() => {
 
     const MENU = [
-        { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '📊', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '👤', roles: ['starosta'] },
-        { id: 'students', path: '#/students', label: 'Студенты', icon: '👨‍🎓', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'grades', path: '#/grades', label: 'Оценки', icon: '📝', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '📚', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'groups', path: '#/groups', label: 'Группы', icon: '👥', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'rating', path: '#/rating', label: 'Рейтинг', icon: '🏆', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'analytics', path: '#/analytics', label: 'Аналитика', icon: '📈', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'settings', path: '#/settings', label: 'Настройки', icon: '⚙️', roles: ['admin', 'teacher', 'starosta', 'student'] }
+        { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '', roles: ['starosta'] },
+        { id: 'students', path: '#/students', label: 'Студенты', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'grades', path: '#/grades', label: 'Оценки', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'groups', path: '#/groups', label: 'Группы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'rating', path: '#/rating', label: 'Рейтинг', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'analytics', path: '#/analytics', label: 'Аналитика', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'settings', path: '#/settings', label: 'Настройки', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] }
     ];
 
     const ROUTES = {
@@ -258,10 +258,14 @@
         });
     };
 
-    const openSidebar = () => { sidebar.classList.add('sidebar--open');
-        overlay.classList.add('overlay--on'); };
-    const closeSidebar = () => { sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('overlay--on'); };
+    const openSidebar = () => {
+        sidebar.classList.add('sidebar--open');
+        overlay.classList.add('overlay--on');
+    };
+    const closeSidebar = () => {
+        sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('overlay--on');
+    };
     burger.addEventListener('click', openSidebar);
     overlay.addEventListener('click', closeSidebar);
     window.addEventListener('resize', () => { if (window.innerWidth > 860) closeSidebar(); });
