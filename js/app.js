@@ -66,7 +66,6 @@
             return;
         }
 
-        // 1) Уже привязан — сразу входим
         const mapping = Store.getMapping(fbUser.uid);
         if (mapping) {
             const user = Store.upsertUser({
@@ -79,7 +78,6 @@
             return;
         }
 
-        // 2) Админ/преподаватель по email — автологин
         const autoRole = FirebaseService.roleForEmail(fbUser.email);
         if (autoRole) {
             const name = fbUser.displayName || fbUser.email;
@@ -90,11 +88,10 @@
             return;
         }
 
-        // 3) Первый раз — регистрация (ввод ФИО)
         openRegistration(fbUser);
     };
 
-    /* ---------------- Регистрация ---------------- */
+    /* ---------------- Регистрация (ввод ФИО) ---------------- */
     const openRegistration = (fbUser) => {
         showRegister();
         $('#regEmail').textContent = fbUser.email || '';
@@ -107,8 +104,8 @@
         matchBox.innerHTML = '';
         matchedStudent = null;
 
-        // Живой поиск по мере ввода
-        input.addEventListener('input', () => {
+        // Живой поиск
+        input.oninput = () => {
             const q = input.value.trim().toLowerCase();
             matchedStudent = null;
 
@@ -153,15 +150,15 @@
                         '</div>';
                 };
             });
-        });
+        };
 
-        // Отмена — выходим из Firebase
+        // Отмена
         $('#regCancel').onclick = async() => {
             try { await FirebaseService.signOut(); } catch (e) {}
             showLogin();
         };
 
-        // Подтверждение
+        // Продолжить
         $('#regConfirm').onclick = () => {
             const name = input.value.trim();
             if (!name || name.length < 3) {
@@ -171,14 +168,12 @@
 
             let student = matchedStudent;
 
-            // Если не выбрали из подсказок — пробуем точное совпадение
             if (!student) {
                 student = Store.getStudents().find(s =>
                     s.fullName.toLowerCase() === name.toLowerCase()
                 );
             }
 
-            // Если и его нет — создаём нового студента
             if (!student) {
                 student = Store.addStudent({
                     fullName: name,
@@ -212,10 +207,10 @@
             enterApp(user);
         };
 
-        // Enter = подтвердить
-        input.addEventListener('keydown', (e) => {
+        // Enter = Продолжить
+        input.onkeydown = (e) => {
             if (e.key === 'Enter') $('#regConfirm').click();
-        });
+        };
 
         setTimeout(() => input.focus(), 100);
     };
