@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Анализ успеваемости студентов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <!-- ==================== ЭКРАН ВХОДА ==================== -->
+    <div id="loginScreen" class="login">
+        <div class="login__card">
+            <div class="login__brand">
+                <div class="logo logo--lg">АУ</div>
+                <div>
+                    <h1 class="login__title">Анализ успеваемости</h1>
+                    <p class="login__sub">Аналитическая платформа колледжа</p>
+                </div>
+            </div>
+
+            <p style="font-size:13px;color:var(--text-3);margin:0 0 18px;line-height:1.5">
+                Войдите через Google-аккаунт, чтобы получить доступ к системе.
+            </p>
+
+            <button class="btn btn--block" id="googleLoginBtn" type="button" style="background:#fff;border:1px solid #dadce0;color:#3c4043;font-weight:600;padding:12px">
+                <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:8px">
+                    <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+                    <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+                    <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/>
+                    <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+                </svg>
+                Войти через Google
+            </button>
+
+            <p class="login__error" id="loginError" hidden></p>
+        </div>
+    </div>
+
+    <!-- ==================== ЭКРАН РЕГИСТРАЦИИ ==================== -->
+    <div id="registerScreen" class="login" hidden>
+        <div class="login__card">
+            <div class="login__brand">
+                <div class="logo logo--lg">АУ</div>
+                <div>
+                    <h1 class="login__title">Завершите регистрацию</h1>
+                    <p class="login__sub">Вы вошли как <b id="regEmail">—</b></p>
+                </div>
+            </div>
+
+            <p style="font-size:13.5px;color:var(--text-2);margin:0 0 18px;line-height:1.5">
+                Выберите себя из списка — система свяжет ваш Google-аккаунт с вашей записью в журнале.
+            </p>
+
+            <label class="field">
+                <span class="field__label">Я — студент</span>
+                <select class="select" id="regStudentSelect">
+                    <option value="">— выберите себя —</option>
+                </select>
+            </label>
+
+            <div style="display:flex;gap:8px;margin-top:18px">
+                <button class="btn btn--ghost" id="regCancel" type="button">Отмена</button>
+                <button class="btn btn--primary" id="regConfirm" type="button" style="flex:1">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ПРИЛОЖЕНИЕ ==================== -->
+    <div id="app" class="app" hidden>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__head">
+                <div class="logo">АУ</div>
+                <div class="sidebar__brand">
+                    <span class="sidebar__name">Успеваемость</span>
+                    <span class="sidebar__caption">College Analytics</span>
+                </div>
+            </div>
+
+            <nav class="nav" id="nav"></nav>
+
+            <div class="sidebar__foot">
+                <div class="user-box" id="userBox"></div>
+                <button class="btn btn--ghost btn--block" id="logoutBtn" type="button">Выйти</button>
+            </div>
+        </aside>
+
+        <div class="overlay" id="overlay"></div>
+
+        <div class="main">
+            <header class="topbar">
+                <button class="icon-btn burger" id="burger" aria-label="Открыть меню" type="button">☰</button>
+                <div class="topbar__titles">
+                    <h2 id="pageTitle">Dashboard</h2>
+                    <p id="pageSubtitle" class="topbar__sub"></p>
+                </div>
+                <div class="topbar__actions" id="topbarActions"></div>
+            </header>
+            <main class="page" id="page"></main>
+        </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+    <div id="modalRoot"></div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <!-- Ядро -->
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/charts.js"></script>
+
+    <!-- Страницы -->
+    <script src="js/pages/dashboard.js"></script>
+    <script src="js/pages/students.js"></script>
+    <script src="js/pages/student.js"></script>
+    <script src="js/pages/grades.js"></script>
+    <script src="js/pages/subjects.js"></script>
+    <script src="js/pages/groups.js"></script>
+    <script src="js/pages/rating.js"></script>
+    <script src="js/pages/analytics.js"></script>
+    <script src="js/pages/settings.js"></script>
+
+    <!-- Роутер -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>

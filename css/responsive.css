@@ -1,0 +1,163 @@
+/* ============================================================
+   ПЛАНШЕТ
+   ============================================================ */
+
+@media (max-width: 1024px) {
+     :root {
+        --sidebar-w: 240px;
+    }
+    .page {
+        padding: 20px 20px 60px;
+    }
+    .topbar {
+        padding: 0 20px;
+    }
+}
+
+
+/* ============================================================
+   МОБИЛЬНЫЕ — сайдбар превращается в выдвижное меню
+   ============================================================ */
+
+@media (max-width: 860px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        box-shadow: var(--shadow-lg);
+    }
+    .sidebar--open {
+        transform: translateX(0);
+    }
+    .main {
+        margin-left: 0;
+    }
+    .burger {
+        display: grid;
+    }
+    .topbar {
+        padding: 0 14px;
+        height: 64px;
+    }
+    .topbar__titles h2 {
+        font-size: 16px;
+    }
+    .topbar__sub {
+        display: none;
+    }
+    .page {
+        padding: 16px 14px 60px;
+    }
+    .grid {
+        gap: 12px;
+    }
+    .card {
+        padding: 16px;
+    }
+    .stat {
+        padding: 16px;
+    }
+    .stat__value {
+        font-size: 22px;
+    }
+    .chart-box {
+        height: 220px;
+    }
+    .chart-box--lg {
+        height: 260px;
+    }
+    table.data {
+        min-width: 620px;
+    }
+    table.data thead th,
+    table.data tbody td {
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+    .podium {
+        grid-template-columns: 1fr;
+    }
+    .podium__item--1 {
+        order: -1;
+    }
+    .login__card {
+        padding: 28px 22px 22px;
+    }
+}
+
+
+/* ============================================================
+   УЗКИЕ ЭКРАНЫ 390 / 430
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .page {
+        padding: 14px 12px 60px;
+    }
+    .topbar {
+        padding: 0 12px;
+    }
+    .stat__value {
+        font-size: 20px;
+    }
+    .card {
+        border-radius: 12px;
+        padding: 14px;
+    }
+    .stat {
+        border-radius: 12px;
+    }
+    .table-toolbar .input,
+    .table-toolbar .select {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+    .table-toolbar {
+        padding: 12px;
+    }
+    .toasts {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+    }
+    .toast {
+        min-width: 0;
+        width: 100%;
+    }
+    .modal__panel {
+        border-radius: 14px;
+    }
+    .modal__body {
+        padding: 16px;
+    }
+    .modal__head,
+    .modal__foot {
+        padding: 14px 16px;
+    }
+    .login {
+        padding: 12px;
+    }
+    .login__card {
+        padding: 24px 18px 20px;
+        border-radius: 18px;
+    }
+    .detail-head {
+        padding: 16px;
+    }
+    .avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+        border-radius: 16px;
+    }
+    .detail-head__name {
+        font-size: 17px;
+    }
+    .btn {
+        padding: 9px 14px;
+        font-size: 13px;
+    }
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+    }
+}
