@@ -5,7 +5,7 @@
 
     const MENU = [
         { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '👤', roles: ['starosta'] },
+        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '', roles: ['starosta'] },
         { id: 'students', path: '#/students', label: 'Студенты', icon: '', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'grades', path: '#/grades', label: 'Оценки', icon: '', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
