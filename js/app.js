@@ -4,15 +4,15 @@
 (() => {
 
     const MENU = [
-        { id: 'dashboard', path: '#/dashboard', labelKey: 'menu.dashboard', icon: '📊', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'my', path: '#/my', labelKey: 'menu.my', icon: '👤', roles: ['starosta'] },
-        { id: 'students', path: '#/students', labelKey: 'menu.students', icon: '👨‍🎓', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'grades', path: '#/grades', labelKey: 'menu.grades', icon: '📝', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'subjects', path: '#/subjects', labelKey: 'menu.subjects', icon: '📚', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'groups', path: '#/groups', labelKey: 'menu.groups', icon: '👥', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'rating', path: '#/rating', labelKey: 'menu.rating', icon: '🏆', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'analytics', path: '#/analytics', labelKey: 'menu.analytics', icon: '📈', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'settings', path: '#/settings', labelKey: 'menu.settings', icon: '⚙️', roles: ['admin', 'teacher', 'starosta', 'student'] }
+        { id: 'dashboard', path: '#/dashboard', labelKey: 'menu.dashboard', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'my', path: '#/my', labelKey: 'menu.my', icon: '', roles: ['starosta'] },
+        { id: 'students', path: '#/students', labelKey: 'menu.students', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'grades', path: '#/grades', labelKey: 'menu.grades', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'subjects', path: '#/subjects', labelKey: 'menu.subjects', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'groups', path: '#/groups', labelKey: 'menu.groups', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'rating', path: '#/rating', labelKey: 'menu.rating', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'analytics', path: '#/analytics', labelKey: 'menu.analytics', icon: '', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'settings', path: '#/settings', labelKey: 'menu.settings', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] }
     ];
 
     const ROUTES = {
@@ -308,10 +308,14 @@
         });
     };
 
-    const openSidebar = () => { sidebar.classList.add('sidebar--open');
-        overlay.classList.add('overlay--on'); };
-    const closeSidebar = () => { sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('overlay--on'); };
+    const openSidebar = () => {
+        sidebar.classList.add('sidebar--open');
+        overlay.classList.add('overlay--on');
+    };
+    const closeSidebar = () => {
+        sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('overlay--on');
+    };
     burger.addEventListener('click', openSidebar);
     overlay.addEventListener('click', closeSidebar);
     window.addEventListener('resize', () => { if (window.innerWidth > 860) closeSidebar(); });
