@@ -51,13 +51,20 @@ const Store = (() => {
 
         if (studentsSnap.empty) return false;
 
-        db = {
-            users: usersSnap.docs.map(d => Object.assign({ id: d.id }, d.data())),
-            students: studentsSnap.docs.map(d => Object.assign({ id: d.id }, d.data())),
-            subjects: subjectsSnap.docs.map(d => Object.assign({ id: d.id }, d.data())),
-            grades: gradesSnap.docs.map(d => Object.assign({ id: d.id }, d.data())),
-            groups: groupsSnap.docs.map(d => Object.assign({ id: d.id }, d.data()))
-        };
+            // Сортировка по имени (для студентов — по fullName, для предметов — по name, для групп — по name)
+    const byName = (arr, key) => arr.sort((a, b) =>
+      String(a[key] || '').localeCompare(String(b[key] || ''), 'ru')
+    );
+
+    db = {
+      users:    usersSnap.docs.map(d => Object.assign({ id: d.id }, d.data()))
+                  .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'ru')),
+      students: byName(studentsSnap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'fullName'),
+      subjects: byName(subjectsSnap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'name'),
+      grades:   gradesSnap.docs.map(d => Object.assign({ id: d.id }, d.data()))
+                  .sort((a, b) => String(a.date || '').localeCompare(String(b.date || ''))),
+      groups:   byName(groupsSnap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'name')
+    };
 
         try {
             const fbUser = firebase.auth().currentUser;
