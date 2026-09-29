@@ -5,7 +5,7 @@
 
     const MENU = [
         { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '', roles: ['starosta'] },
+        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '👤', roles: ['starosta'] },
         { id: 'students', path: '#/students', label: 'Студенты', icon: '', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'grades', path: '#/grades', label: 'Оценки', icon: '', roles: ['admin', 'teacher', 'starosta'] },
         { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
@@ -123,7 +123,7 @@
                 matchBox.innerHTML =
                     '<div class="insight" style="padding:10px 12px;font-size:12.5px">' +
                     '<div class="insight__icon">+</div>' +
-                    '<div>Совпадений нет. Будет создан <b>новый профиль</b> в группе ПКС-7-24.</div>' +
+                    '<div>Совпадений нет. Проверьте написание ФИО или обратитесь к администратору.</div>' +
                     '</div>';
                 return;
             }
@@ -174,14 +174,8 @@
             }
 
             if (!student) {
-                student = Store.addStudent({
-                    fullName: name,
-                    group: 'ПКС-7-24',
-                    course: 2,
-                    specialty: 'Техники-программисты',
-                    isStarosta: false
-                });
-                Utils.toast('Создан новый профиль студента', 'info');
+                Utils.toast('Студент с таким ФИО не найден. Обратитесь к администратору.', 'error');
+                return;
             }
 
             const role = student.isStarosta ? 'starosta' : 'student';
@@ -342,8 +336,6 @@
 
     /* ---------------- Инициализация ---------------- */
     const init = () => {
-        Store.load();
-
         $('#googleLoginBtn').addEventListener('click', async() => {
             if (!FirebaseService.isConfigured()) {
                 $('#loginError').textContent = 'Firebase не настроен. Проверьте js/firebase.js';
@@ -359,13 +351,29 @@
         });
 
         const ok = FirebaseService.init();
-        if (ok) {
-            FirebaseService.onAuthChanged(handleFirebaseUser);
-        } else {
+        if (!ok) {
             $('#loginError').textContent = 'Firebase не настроен. Проверьте js/firebase.js';
             $('#loginError').hidden = false;
             showLogin();
+            return;
         }
+
+        // Показываем индикатор загрузки
+        loginScreen.hidden = false;
+        $('#loginError').textContent = 'Загрузка данных из облака…';
+        $('#loginError').hidden = false;
+
+        // Асинхронная загрузка данных из Firestore
+        Store.load().then(() => {
+            $('#loginError').hidden = true;
+            FirebaseService.onAuthChanged(handleFirebaseUser);
+        }).catch(err => {
+            console.error('Ошибка загрузки данных:', err);
+            $('#loginError').textContent = 'Ошибка загрузки: ' + err.message;
+            $('#loginError').hidden = false;
+            // Всё равно подключаем обработчик auth
+            FirebaseService.onAuthChanged(handleFirebaseUser);
+        });
     };
 
     document.addEventListener('DOMContentLoaded', init);
