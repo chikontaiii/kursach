@@ -7,8 +7,8 @@ const I18n = (() => {
 
     const translations = {
         ru: {
-            // Меню
-            'menu.dashboard': 'Доска',
+            // ==================== Меню ====================
+            'menu.dashboard': 'Dashboard',
             'menu.my': 'Мой профиль',
             'menu.students': 'Студенты',
             'menu.grades': 'Оценки',
@@ -18,7 +18,7 @@ const I18n = (() => {
             'menu.analytics': 'Аналитика',
             'menu.settings': 'Настройки',
 
-            // Заголовки страниц
+            // ==================== Заголовки страниц ====================
             'page.dashboard.title': 'Dashboard',
             'page.dashboard.subtitle': 'Обзор успеваемости группы',
             'page.my.title': 'Мой профиль',
@@ -40,7 +40,7 @@ const I18n = (() => {
             'page.settings.title': 'Настройки',
             'page.settings.subtitle': 'Профиль и оформление',
 
-            // Общее
+            // ==================== Общее ====================
             'common.logout': 'Выйти',
             'common.admin': 'Администратор',
             'common.teacher': 'Преподаватель',
@@ -48,14 +48,75 @@ const I18n = (() => {
             'common.student': 'Студент',
             'common.loading': 'Загрузка данных из облака…',
             'common.welcome': 'Добро пожаловать',
-            'common.good': 'Отлично',
-            'common.warning': 'Требует внимания',
-            'common.low': 'Низкая успеваемость',
-            'common.high': 'Высокая успеваемость'
+            'common.cancel': 'Отмена',
+            'common.save': 'Сохранить',
+            'common.add': 'Добавить',
+            'common.edit': 'Редактировать',
+            'common.delete': 'Удалить',
+            'common.close': 'Закрыть',
+            'common.search': 'Поиск',
+            'common.all': 'Все',
+            'common.yes': 'Да',
+            'common.no': 'Нет',
+            'common.ok': 'ОК',
+            'common.course': 'Курс',
+            'common.semester': 'Семестр',
+            'common.date': 'Дата',
+            'common.teacher2': 'Преподаватель',
+            'common.student2': 'Студент',
+            'common.subject': 'Предмет',
+            'common.grade': 'Оценка',
+            'common.group': 'Группа',
+            'common.name': 'ФИО',
+            'common.actions': 'Действия',
+            'common.number': '№',
+
+            // ==================== Статусы ====================
+            'status.high': 'Высокая успеваемость',
+            'status.good': 'Хорошая',
+            'status.warn': 'Требует внимания',
+            'status.low': 'Низкая успеваемость',
+
+            // ==================== Страница «Студенты» ====================
+            'students.search': 'Поиск по ФИО...',
+            'students.allGroups': 'Все группы',
+            'students.allCourses': 'Все курсы',
+            'students.export': '⬇ CSV',
+            'students.exportToast': 'Список студентов экспортирован',
+            'students.empty.title': 'Студенты не найдены',
+            'students.empty.text': 'Попробуйте изменить параметры поиска или фильтры.',
+            'students.table.name': 'ФИО',
+            'students.table.group': 'Группа',
+            'students.table.course': 'Курс',
+            'students.table.avg': 'Средний балл',
+            'students.table.perf': 'Успеваемость',
+            'students.table.status': 'Статус',
+            'students.table.actions': 'Действия',
+            'students.showing': 'Показано',
+            'students.of': 'из',
+            'students.add': '+ Добавить студента',
+            'students.modal.new': 'Новый студент',
+            'students.modal.edit': 'Редактировать студента',
+            'students.modal.name': 'ФИО',
+            'students.modal.group': 'Группа',
+            'students.modal.course': 'Курс',
+            'students.modal.specialty': 'Специальность',
+            'students.modal.placeholder': 'Иванов Иван Иванович',
+            'students.added': 'Студент добавлен',
+            'students.updated': 'Данные студента обновлены',
+            'students.deleted': 'Студент удалён',
+            'students.delete.title': 'Удалить студента?',
+            'students.delete.message': 'Студент и все его оценки будут удалены безвозвратно.',
+            'students.nameRequired': 'Введите ФИО студента',
+            'students.confirmDelete': 'Удалить',
+            'students.courseSuffix': 'курс',
+            'students.viewProfile': 'Открыть профиль',
+            'students.edit': 'Редактировать',
+            'students.delete': 'Удалить'
         },
 
         kg: {
-            // Меню
+            // ==================== Меню ====================
             'menu.dashboard': 'Башкы бет',
             'menu.my': 'Менин профилим',
             'menu.students': 'Студенттер',
@@ -66,7 +127,7 @@ const I18n = (() => {
             'menu.analytics': 'Аналитика',
             'menu.settings': 'Жөндөөлөр',
 
-            // Заголовки
+            // ==================== Заголовки ====================
             'page.dashboard.title': 'Башкы бет',
             'page.dashboard.subtitle': 'Топтун жетишкендигине сереп',
             'page.my.title': 'Менин профилим',
@@ -88,7 +149,7 @@ const I18n = (() => {
             'page.settings.title': 'Жөндөөлөр',
             'page.settings.subtitle': 'Профиль жана жасалга',
 
-            // Общее
+            // ==================== Общее ====================
             'common.logout': 'Чыгуу',
             'common.admin': 'Администратор',
             'common.teacher': 'Мугалим',
@@ -96,14 +157,75 @@ const I18n = (() => {
             'common.student': 'Студент',
             'common.loading': 'Булуттан маалымат жүктөлүүдө…',
             'common.welcome': 'Кош келиңиз',
-            'common.good': 'Жакшы',
-            'common.warning': 'Көңүл буруу керек',
-            'common.low': 'Төмөн жетишкендик',
-            'common.high': 'Жогорку жетишкендик'
+            'common.cancel': 'Жокко чыгаруу',
+            'common.save': 'Сактоо',
+            'common.add': 'Кошуу',
+            'common.edit': 'Оңдоо',
+            'common.delete': 'Өчүрүү',
+            'common.close': 'Жабуу',
+            'common.search': 'Издөө',
+            'common.all': 'Баары',
+            'common.yes': 'Ооба',
+            'common.no': 'Жок',
+            'common.ok': 'ОК',
+            'common.course': 'Курс',
+            'common.semester': 'Семестр',
+            'common.date': 'Күнү',
+            'common.teacher2': 'Мугалим',
+            'common.student2': 'Студент',
+            'common.subject': 'Предмет',
+            'common.grade': 'Баа',
+            'common.group': 'Топ',
+            'common.name': 'Аты-жөнү',
+            'common.actions': 'Аракеттер',
+            'common.number': '№',
+
+            // ==================== Статусы ====================
+            'status.high': 'Жогорку жетишкендик',
+            'status.good': 'Жакшы',
+            'status.warn': 'Көңүл буруу керек',
+            'status.low': 'Төмөн жетишкендик',
+
+            // ==================== Страница «Студенты» ====================
+            'students.search': 'Аты-жөнү боюнча издөө...',
+            'students.allGroups': 'Бардык топтор',
+            'students.allCourses': 'Бардык курстар',
+            'students.export': '⬇ CSV',
+            'students.exportToast': 'Студенттердин тизмеси экспорттолду',
+            'students.empty.title': 'Студенттер табылган жок',
+            'students.empty.text': 'Издөө параметрлерин же чыпкаларды өзгөртүп көрүңүз.',
+            'students.table.name': 'Аты-жөнү',
+            'students.table.group': 'Топ',
+            'students.table.course': 'Курс',
+            'students.table.avg': 'Орточо балл',
+            'students.table.perf': 'Жетишкендик',
+            'students.table.status': 'Статус',
+            'students.table.actions': 'Аракеттер',
+            'students.showing': 'Көрсөтүлдү',
+            'students.of': 'ичинен',
+            'students.add': '+ Студент кошуу',
+            'students.modal.new': 'Жаңы студент',
+            'students.modal.edit': 'Студентти оңдоо',
+            'students.modal.name': 'Аты-жөнү',
+            'students.modal.group': 'Топ',
+            'students.modal.course': 'Курс',
+            'students.modal.specialty': 'Адистик',
+            'students.modal.placeholder': 'Иванов Иван Иванович',
+            'students.added': 'Студент кошулду',
+            'students.updated': 'Студенттин маалыматы жаңыртылды',
+            'students.deleted': 'Студент өчүрүлдү',
+            'students.delete.title': 'Студентти өчүрөсүзбү?',
+            'students.delete.message': 'Студент жана анын бардык баалары кайтарылгыс өчүрүлөт.',
+            'students.nameRequired': 'Студенттин аты-жөнүн киргизиңиз',
+            'students.confirmDelete': 'Өчүрүү',
+            'students.courseSuffix': 'курс',
+            'students.viewProfile': 'Профилди ачуу',
+            'students.edit': 'Оңдоо',
+            'students.delete': 'Өчүрүү'
         },
 
         en: {
-            // Меню
+            // ==================== Меню ====================
             'menu.dashboard': 'Dashboard',
             'menu.my': 'My Profile',
             'menu.students': 'Students',
@@ -114,7 +236,7 @@ const I18n = (() => {
             'menu.analytics': 'Analytics',
             'menu.settings': 'Settings',
 
-            // Заголовки
+            // ==================== Заголовки ====================
             'page.dashboard.title': 'Dashboard',
             'page.dashboard.subtitle': 'Group performance overview',
             'page.my.title': 'My Profile',
@@ -136,7 +258,7 @@ const I18n = (() => {
             'page.settings.title': 'Settings',
             'page.settings.subtitle': 'Profile and appearance',
 
-            // Общее
+            // ==================== Общее ====================
             'common.logout': 'Log out',
             'common.admin': 'Administrator',
             'common.teacher': 'Teacher',
@@ -144,10 +266,71 @@ const I18n = (() => {
             'common.student': 'Student',
             'common.loading': 'Loading data from cloud…',
             'common.welcome': 'Welcome',
-            'common.good': 'Good',
-            'common.warning': 'Needs attention',
-            'common.low': 'Low performance',
-            'common.high': 'High performance'
+            'common.cancel': 'Cancel',
+            'common.save': 'Save',
+            'common.add': 'Add',
+            'common.edit': 'Edit',
+            'common.delete': 'Delete',
+            'common.close': 'Close',
+            'common.search': 'Search',
+            'common.all': 'All',
+            'common.yes': 'Yes',
+            'common.no': 'No',
+            'common.ok': 'OK',
+            'common.course': 'Course',
+            'common.semester': 'Semester',
+            'common.date': 'Date',
+            'common.teacher2': 'Teacher',
+            'common.student2': 'Student',
+            'common.subject': 'Subject',
+            'common.grade': 'Grade',
+            'common.group': 'Group',
+            'common.name': 'Full name',
+            'common.actions': 'Actions',
+            'common.number': 'No.',
+
+            // ==================== Статусы ====================
+            'status.high': 'High performance',
+            'status.good': 'Good',
+            'status.warn': 'Needs attention',
+            'status.low': 'Low performance',
+
+            // ==================== Страница «Студенты» ====================
+            'students.search': 'Search by name...',
+            'students.allGroups': 'All groups',
+            'students.allCourses': 'All courses',
+            'students.export': '⬇ CSV',
+            'students.exportToast': 'Student list exported',
+            'students.empty.title': 'No students found',
+            'students.empty.text': 'Try changing search or filters.',
+            'students.table.name': 'Full name',
+            'students.table.group': 'Group',
+            'students.table.course': 'Course',
+            'students.table.avg': 'Average',
+            'students.table.perf': 'Performance',
+            'students.table.status': 'Status',
+            'students.table.actions': 'Actions',
+            'students.showing': 'Showing',
+            'students.of': 'of',
+            'students.add': '+ Add student',
+            'students.modal.new': 'New student',
+            'students.modal.edit': 'Edit student',
+            'students.modal.name': 'Full name',
+            'students.modal.group': 'Group',
+            'students.modal.course': 'Course',
+            'students.modal.specialty': 'Specialty',
+            'students.modal.placeholder': 'John Smith',
+            'students.added': 'Student added',
+            'students.updated': 'Student updated',
+            'students.deleted': 'Student deleted',
+            'students.delete.title': 'Delete student?',
+            'students.delete.message': 'Student and all their grades will be permanently deleted.',
+            'students.nameRequired': 'Enter student name',
+            'students.confirmDelete': 'Delete',
+            'students.courseSuffix': 'course',
+            'students.viewProfile': 'Open profile',
+            'students.edit': 'Edit',
+            'students.delete': 'Delete'
         }
     };
 
@@ -163,7 +346,6 @@ const I18n = (() => {
         current = lang;
         localStorage.setItem(KEY, lang);
         document.documentElement.setAttribute('lang', lang);
-        // Сообщаем приложению, что надо перерисоваться
         window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: lang } }));
     };
 
