@@ -7,7 +7,7 @@ const I18n = (() => {
 
     const translations = {
         ru: {
-            // ==================== Меню ====================
+            // ============ Меню ============
             'menu.dashboard': 'Dashboard',
             'menu.my': 'Мой профиль',
             'menu.students': 'Студенты',
@@ -18,7 +18,7 @@ const I18n = (() => {
             'menu.analytics': 'Аналитика',
             'menu.settings': 'Настройки',
 
-            // ==================== Заголовки страниц ====================
+            // ============ Заголовки ============
             'page.dashboard.title': 'Dashboard',
             'page.dashboard.subtitle': 'Обзор успеваемости группы',
             'page.my.title': 'Мой профиль',
@@ -40,7 +40,7 @@ const I18n = (() => {
             'page.settings.title': 'Настройки',
             'page.settings.subtitle': 'Профиль и оформление',
 
-            // ==================== Общее ====================
+            // ============ Общее ============
             'common.logout': 'Выйти',
             'common.admin': 'Администратор',
             'common.teacher': 'Преподаватель',
@@ -56,9 +56,6 @@ const I18n = (() => {
             'common.close': 'Закрыть',
             'common.search': 'Поиск',
             'common.all': 'Все',
-            'common.yes': 'Да',
-            'common.no': 'Нет',
-            'common.ok': 'ОК',
             'common.course': 'Курс',
             'common.semester': 'Семестр',
             'common.date': 'Дата',
@@ -70,14 +67,15 @@ const I18n = (() => {
             'common.name': 'ФИО',
             'common.actions': 'Действия',
             'common.number': '№',
+            'common.noData': 'Нет данных',
 
-            // ==================== Статусы ====================
+            // ============ Статусы ============
             'status.high': 'Высокая успеваемость',
             'status.good': 'Хорошая',
             'status.warn': 'Требует внимания',
             'status.low': 'Низкая успеваемость',
 
-            // ==================== Страница «Студенты» ====================
+            // ============ Студенты ============
             'students.search': 'Поиск по ФИО...',
             'students.allGroups': 'Все группы',
             'students.allCourses': 'Все курсы',
@@ -112,11 +110,78 @@ const I18n = (() => {
             'students.courseSuffix': 'курс',
             'students.viewProfile': 'Открыть профиль',
             'students.edit': 'Редактировать',
-            'students.delete': 'Удалить'
+            'students.delete': 'Удалить',
+
+            // ============ Dashboard ============
+            'dash.overview': 'Обзор успеваемости',
+            'dash.overview.group': 'Обзор успеваемости вашей группы',
+            'dash.card.totalStudents': 'Всего студентов',
+            'dash.card.totalStudents.hint': 'В базе данных',
+            'dash.card.groups': 'Групп',
+            'dash.card.groups.hint': 'Активных групп',
+            'dash.card.avg': 'Средний балл',
+            'dash.card.avg.hint': 'По всем оценкам',
+            'dash.card.perf': 'Успеваемость',
+            'dash.card.perf.hint': 'Оценки 3, 4, 5',
+            'dash.card.risk': 'Группа риска',
+            'dash.card.risk.hint': 'Средний балл < 3.5',
+            'dash.chart.bySubjects': 'Средний балл по предметам',
+            'dash.chart.bySubjects.sub': 'Сравнение успеваемости по дисциплинам',
+            'dash.chart.bySemesters': 'Динамика по семестрам',
+            'dash.chart.bySemesters.sub': 'Изменение среднего балла',
+            'dash.chart.distribution': 'Распределение оценок',
+            'dash.chart.distribution.sub': 'Общее количество оценок по баллам',
+            'dash.chart.top5': 'ТОП-5 студентов',
+            'dash.chart.top5.sub': 'Наивысший средний балл',
+            'dash.insights.title': 'Аналитические выводы',
+            'dash.insights.sub': 'Автоматически сформировано по данным',
+            'dash.recent.title': 'Последние оценки',
+            'dash.recent.sub': 'Свежие записи в журнале',
+            'dash.recent.empty.title': 'Оценок пока нет',
+            'dash.recent.empty.text': 'Добавьте первую оценку на странице «Оценки».',
+            'dash.semesterN': '{n} семестр',
+            'dash.noData': 'Нет данных',
+
+            // График распределения (подписи долей)
+            'chart.grade5': 'Отлично (5)',
+            'chart.grade4': 'Хорошо (4)',
+            'chart.grade3': 'Удовл. (3)',
+            'chart.grade2': 'Неуд. (2)',
+
+            // Аналитические выводы
+            'insight.avg': 'Средний балл составляет <b>{avg}</b>, успеваемость — <b>{perf}%</b>.',
+            'insight.best': 'Наиболее высокий средний результат по предмету <b>«{name}»</b> — {avg}.',
+            'insight.worst': 'Наименьший средний балл по предмету <b>«{name}»</b> — {avg}.',
+            'insight.risk': '<b>{n}</b> студентов имеют средний балл ниже 3.5 — требуется внимание.',
+            'insight.noRisk': 'Студентов со средним баллом ниже 3.5 не обнаружено.',
+            'insight.progress': 'По сравнению с первым семестром средний балл изменился на <b>{diff}</b>.',
+
+            // Мой профиль (student view)
+            'my.avg': 'Средний балл',
+            'my.avg.hint': 'По всем оценкам',
+            'my.perf': 'Успеваемость',
+            'my.perf.hint': 'Оценки 3, 4, 5',
+            'my.count': 'Всего оценок',
+            'my.count.hint': 'Записей в журнале',
+            'my.five': 'Отлично',
+            'my.five.hint': 'Оценок «5»',
+            'my.four': 'Хорошо',
+            'my.four.hint': 'Оценок «4»',
+            'my.three': 'Удовлетворительно',
+            'my.three.hint': 'Оценок «3»',
+            'my.two': 'Неудовлетворительно',
+            'my.two.hint': 'Оценок «2»',
+            'my.chart.sem': 'Динамика по семестрам',
+            'my.chart.subj': 'Средний балл по предметам',
+            'my.grades.title': 'Все мои оценки',
+            'my.grades.empty': 'Оценок пока нет',
+            'my.grades.empty.text': 'Оценки появятся здесь, когда преподаватель их выставит.',
+            'my.profile.notFound': 'Профиль не найден',
+            'my.profile.notFound.text': 'Обратитесь к администратору.'
         },
 
         kg: {
-            // ==================== Меню ====================
+            // ============ Меню ============
             'menu.dashboard': 'Башкы бет',
             'menu.my': 'Менин профилим',
             'menu.students': 'Студенттер',
@@ -127,7 +192,7 @@ const I18n = (() => {
             'menu.analytics': 'Аналитика',
             'menu.settings': 'Жөндөөлөр',
 
-            // ==================== Заголовки ====================
+            // ============ Заголовки ============
             'page.dashboard.title': 'Башкы бет',
             'page.dashboard.subtitle': 'Топтун жетишкендигине сереп',
             'page.my.title': 'Менин профилим',
@@ -149,7 +214,7 @@ const I18n = (() => {
             'page.settings.title': 'Жөндөөлөр',
             'page.settings.subtitle': 'Профиль жана жасалга',
 
-            // ==================== Общее ====================
+            // ============ Общее ============
             'common.logout': 'Чыгуу',
             'common.admin': 'Администратор',
             'common.teacher': 'Мугалим',
@@ -165,9 +230,6 @@ const I18n = (() => {
             'common.close': 'Жабуу',
             'common.search': 'Издөө',
             'common.all': 'Баары',
-            'common.yes': 'Ооба',
-            'common.no': 'Жок',
-            'common.ok': 'ОК',
             'common.course': 'Курс',
             'common.semester': 'Семестр',
             'common.date': 'Күнү',
@@ -179,14 +241,15 @@ const I18n = (() => {
             'common.name': 'Аты-жөнү',
             'common.actions': 'Аракеттер',
             'common.number': '№',
+            'common.noData': 'Маалымат жок',
 
-            // ==================== Статусы ====================
+            // ============ Статусы ============
             'status.high': 'Жогорку жетишкендик',
             'status.good': 'Жакшы',
             'status.warn': 'Көңүл буруу керек',
             'status.low': 'Төмөн жетишкендик',
 
-            // ==================== Страница «Студенты» ====================
+            // ============ Студенты ============
             'students.search': 'Аты-жөнү боюнча издөө...',
             'students.allGroups': 'Бардык топтор',
             'students.allCourses': 'Бардык курстар',
@@ -221,11 +284,75 @@ const I18n = (() => {
             'students.courseSuffix': 'курс',
             'students.viewProfile': 'Профилди ачуу',
             'students.edit': 'Оңдоо',
-            'students.delete': 'Өчүрүү'
+            'students.delete': 'Өчүрүү',
+
+            // ============ Dashboard ============
+            'dash.overview': 'Жетишкендикке сереп',
+            'dash.overview.group': 'Тобуңуздун жетишкендигине сереп',
+            'dash.card.totalStudents': 'Бардык студенттер',
+            'dash.card.totalStudents.hint': 'Маалымат базасында',
+            'dash.card.groups': 'Топтор',
+            'dash.card.groups.hint': 'Активдүү топтор',
+            'dash.card.avg': 'Орточо балл',
+            'dash.card.avg.hint': 'Бардык баалар боюнча',
+            'dash.card.perf': 'Жетишкендик',
+            'dash.card.perf.hint': '3, 4, 5 баалары',
+            'dash.card.risk': 'Тобокелдик тобу',
+            'dash.card.risk.hint': 'Орточо балл < 3.5',
+            'dash.chart.bySubjects': 'Предметтер боюнча орточо балл',
+            'dash.chart.bySubjects.sub': 'Дисциплиналар боюнча салыштыруу',
+            'dash.chart.bySemesters': 'Семестрлер боюнча динамика',
+            'dash.chart.bySemesters.sub': 'Орточо баллдын өзгөрүшү',
+            'dash.chart.distribution': 'Баалардын бөлүштүрүлүшү',
+            'dash.chart.distribution.sub': 'Баллдар боюнча баалардын саны',
+            'dash.chart.top5': 'ТОП-5 студент',
+            'dash.chart.top5.sub': 'Эң жогорку орточо балл',
+            'dash.insights.title': 'Аналитикалык жыйынтыктар',
+            'dash.insights.sub': 'Маалыматтар боюнча автоматтык түзүлгөн',
+            'dash.recent.title': 'Акыркы баалар',
+            'dash.recent.sub': 'Журналдагы жаңы жазуулар',
+            'dash.recent.empty.title': 'Баалар азырынча жок',
+            'dash.recent.empty.text': '«Баалар» баракчасынан биринчи бааны кошуңуз.',
+            'dash.semesterN': '{n} семестр',
+            'dash.noData': 'Маалымат жок',
+
+            'chart.grade5': 'Мыкты (5)',
+            'chart.grade4': 'Жакшы (4)',
+            'chart.grade3': 'Канааттандырарлык (3)',
+            'chart.grade2': 'Канааттандырбайт (2)',
+
+            'insight.avg': 'Орточо балл <b>{avg}</b>, жетишкендик — <b>{perf}%</b>.',
+            'insight.best': 'Эң жогорку орточо жыйынтык <b>«{name}»</b> предметинде — {avg}.',
+            'insight.worst': 'Эң төмөн орточо балл <b>«{name}»</b> предметинде — {avg}.',
+            'insight.risk': '<b>{n}</b> студенттин орточо баллы 3.5тен төмөн — көңүл буруу керек.',
+            'insight.noRisk': 'Орточо баллы 3.5тен төмөн студенттер табылган жок.',
+            'insight.progress': 'Биринчи семестрге салыштырмалуу орточо балл <b>{diff}</b> өзгөрдү.',
+
+            'my.avg': 'Орточо балл',
+            'my.avg.hint': 'Бардык баалар боюнча',
+            'my.perf': 'Жетишкендик',
+            'my.perf.hint': '3, 4, 5 баалары',
+            'my.count': 'Бардык баалар',
+            'my.count.hint': 'Журналдагы жазуулар',
+            'my.five': 'Мыкты',
+            'my.five.hint': '«5» баалары',
+            'my.four': 'Жакшы',
+            'my.four.hint': '«4» баалары',
+            'my.three': 'Канааттандырарлык',
+            'my.three.hint': '«3» баалары',
+            'my.two': 'Канааттандырбайт',
+            'my.two.hint': '«2» баалары',
+            'my.chart.sem': 'Семестрлер боюнча динамика',
+            'my.chart.subj': 'Предметтер боюнча орточо балл',
+            'my.grades.title': 'Менин бардык бааларым',
+            'my.grades.empty': 'Баалар азырынча жок',
+            'my.grades.empty.text': 'Мугалим баа койгондо, алар ушул жерде пайда болот.',
+            'my.profile.notFound': 'Профиль табылган жок',
+            'my.profile.notFound.text': 'Администраторго кайрылыңыз.'
         },
 
         en: {
-            // ==================== Меню ====================
+            // ============ Menu ============
             'menu.dashboard': 'Dashboard',
             'menu.my': 'My Profile',
             'menu.students': 'Students',
@@ -236,7 +363,7 @@ const I18n = (() => {
             'menu.analytics': 'Analytics',
             'menu.settings': 'Settings',
 
-            // ==================== Заголовки ====================
+            // ============ Titles ============
             'page.dashboard.title': 'Dashboard',
             'page.dashboard.subtitle': 'Group performance overview',
             'page.my.title': 'My Profile',
@@ -258,7 +385,7 @@ const I18n = (() => {
             'page.settings.title': 'Settings',
             'page.settings.subtitle': 'Profile and appearance',
 
-            // ==================== Общее ====================
+            // ============ Common ============
             'common.logout': 'Log out',
             'common.admin': 'Administrator',
             'common.teacher': 'Teacher',
@@ -274,9 +401,6 @@ const I18n = (() => {
             'common.close': 'Close',
             'common.search': 'Search',
             'common.all': 'All',
-            'common.yes': 'Yes',
-            'common.no': 'No',
-            'common.ok': 'OK',
             'common.course': 'Course',
             'common.semester': 'Semester',
             'common.date': 'Date',
@@ -288,14 +412,15 @@ const I18n = (() => {
             'common.name': 'Full name',
             'common.actions': 'Actions',
             'common.number': 'No.',
+            'common.noData': 'No data',
 
-            // ==================== Статусы ====================
+            // ============ Statuses ============
             'status.high': 'High performance',
             'status.good': 'Good',
             'status.warn': 'Needs attention',
             'status.low': 'Low performance',
 
-            // ==================== Страница «Студенты» ====================
+            // ============ Students ============
             'students.search': 'Search by name...',
             'students.allGroups': 'All groups',
             'students.allCourses': 'All courses',
@@ -330,7 +455,71 @@ const I18n = (() => {
             'students.courseSuffix': 'course',
             'students.viewProfile': 'Open profile',
             'students.edit': 'Edit',
-            'students.delete': 'Delete'
+            'students.delete': 'Delete',
+
+            // ============ Dashboard ============
+            'dash.overview': 'Performance overview',
+            'dash.overview.group': 'Your group performance overview',
+            'dash.card.totalStudents': 'Total students',
+            'dash.card.totalStudents.hint': 'In the database',
+            'dash.card.groups': 'Groups',
+            'dash.card.groups.hint': 'Active groups',
+            'dash.card.avg': 'Average grade',
+            'dash.card.avg.hint': 'Across all grades',
+            'dash.card.perf': 'Performance',
+            'dash.card.perf.hint': 'Grades 3, 4, 5',
+            'dash.card.risk': 'At-risk group',
+            'dash.card.risk.hint': 'Average < 3.5',
+            'dash.chart.bySubjects': 'Average grade by subject',
+            'dash.chart.bySubjects.sub': 'Performance comparison',
+            'dash.chart.bySemesters': 'Semester dynamics',
+            'dash.chart.bySemesters.sub': 'Average grade change',
+            'dash.chart.distribution': 'Grade distribution',
+            'dash.chart.distribution.sub': 'Total grades by score',
+            'dash.chart.top5': 'Top 5 students',
+            'dash.chart.top5.sub': 'Highest average grade',
+            'dash.insights.title': 'Analytical insights',
+            'dash.insights.sub': 'Automatically generated from data',
+            'dash.recent.title': 'Recent grades',
+            'dash.recent.sub': 'Latest entries in the journal',
+            'dash.recent.empty.title': 'No grades yet',
+            'dash.recent.empty.text': 'Add the first grade on the "Grades" page.',
+            'dash.semesterN': 'Semester {n}',
+            'dash.noData': 'No data',
+
+            'chart.grade5': 'Excellent (5)',
+            'chart.grade4': 'Good (4)',
+            'chart.grade3': 'Satisfactory (3)',
+            'chart.grade2': 'Unsatisfactory (2)',
+
+            'insight.avg': 'Average grade is <b>{avg}</b>, performance — <b>{perf}%</b>.',
+            'insight.best': 'Highest average result in <b>"{name}"</b> — {avg}.',
+            'insight.worst': 'Lowest average grade in <b>"{name}"</b> — {avg}.',
+            'insight.risk': '<b>{n}</b> students have average below 3.5 — attention required.',
+            'insight.noRisk': 'No students with average below 3.5 found.',
+            'insight.progress': 'Compared to the first semester, average grade changed by <b>{diff}</b>.',
+
+            'my.avg': 'Average grade',
+            'my.avg.hint': 'Across all grades',
+            'my.perf': 'Performance',
+            'my.perf.hint': 'Grades 3, 4, 5',
+            'my.count': 'Total grades',
+            'my.count.hint': 'Entries in journal',
+            'my.five': 'Excellent',
+            'my.five.hint': '"5" grades',
+            'my.four': 'Good',
+            'my.four.hint': '"4" grades',
+            'my.three': 'Satisfactory',
+            'my.three.hint': '"3" grades',
+            'my.two': 'Unsatisfactory',
+            'my.two.hint': '"2" grades',
+            'my.chart.sem': 'Semester dynamics',
+            'my.chart.subj': 'Average grade by subject',
+            'my.grades.title': 'All my grades',
+            'my.grades.empty': 'No grades yet',
+            'my.grades.empty.text': 'Grades will appear here once a teacher adds them.',
+            'my.profile.notFound': 'Profile not found',
+            'my.profile.notFound.text': 'Please contact the administrator.'
         }
     };
 
@@ -339,6 +528,19 @@ const I18n = (() => {
         if (dict[key] !== undefined) return dict[key];
         if (translations.ru[key] !== undefined) return translations.ru[key];
         return fallback !== undefined ? fallback : key;
+    };
+
+    /* Подстановка параметров: format('insight.avg', {avg: 4.5, perf: 92}) */
+    const format = (key, params) => {
+        let str = t(key);
+        if (params) {
+            for (const k in params) {
+                if (Object.prototype.hasOwnProperty.call(params, k)) {
+                    str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), params[k]);
+                }
+            }
+        }
+        return str;
     };
 
     const setLang = (lang) => {
@@ -353,6 +555,7 @@ const I18n = (() => {
 
     return {
         t: t,
+        format: format,
         setLang: setLang,
         getLang: getLang,
         languages: ['ru', 'kg', 'en']

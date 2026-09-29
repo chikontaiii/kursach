@@ -3,11 +3,11 @@
    ============================================================ */
 const DashboardPage = (() => {
 
-    /* ---------------- ОСНОВНОЙ DASHBOARD (admin/teacher/starosta) ---------------- */
+    /* ============================================================
+       ОСНОВНОЙ DASHBOARD (admin/teacher/starosta)
+       ============================================================ */
     const render = (container) => {
         const user = Store.getCurrentUser();
-
-        // Студент видит только свою страницу
         if (user.role === 'student') return renderStudentView(container, user);
 
         const students = Store.visibleStudents();
@@ -17,7 +17,6 @@ const DashboardPage = (() => {
         const avg = grades.length ? Utils.round(Utils.avg(grades.map(g => g.grade)), 2) : 0;
         const perf = Utils.perfPercent(grades);
 
-        // Группа риска — только из видимых студентов
         const risk = students.filter(s => {
             const a = Store.studentAverage(s.id);
             return a > 0 && a < 3.5;
@@ -27,7 +26,6 @@ const DashboardPage = (() => {
         const bestSubject = subjectStats.slice().sort((a, b) => b.avg - a.avg)[0];
         const worstSubject = subjectStats.slice().sort((a, b) => a.avg - b.avg)[0];
 
-        // Семестры по видимым оценкам
         const semMap = {};
         grades.forEach(g => {
             if (!semMap[g.semester]) semMap[g.semester] = [];
@@ -38,40 +36,36 @@ const DashboardPage = (() => {
             avg: Utils.round(Utils.avg(semMap[sem]), 2)
         }));
 
-        // Распределение оценок
         const dist = Store.gradeDistribution(grades);
-
-        // Последние оценки
         const recent = Utils.sortBy(grades, 'date', 'desc').slice(0, 6);
 
         const headerText = user.role === 'starosta' ?
-            'Обзор успеваемости вашей группы' :
-            'Обзор успеваемости';
+            I18n.t('dash.overview.group') :
+            I18n.t('dash.overview');
 
         container.innerHTML =
             '<h3 class="section-title" style="margin-top:0">' + headerText + '</h3>' +
 
             '<div class="grid grid--stats">' +
-            statCard('Всего студентов', students.length, '👨‍🎓', '', 'В базе данных') +
-            statCard('Групп', groups.length, '👥', '', 'Активных групп') +
-            statCard('Средний балл', avg.toFixed(2), '⭐', '', 'По всем оценкам') +
-            statCard('Успеваемость', perf + '%', '📈', perf >= 85 ? 'green' : perf >= 70 ? 'yellow' : 'red', 'Оценки 3, 4, 5') +
-            statCard('Группа риска', risk.length, '⚠️', risk.length ? 'red' : 'green', 'Средний балл < 3.5') +
+            statCard(I18n.t('dash.card.totalStudents'), students.length, '👨‍🎓', '', I18n.t('dash.card.totalStudents.hint')) +
+            statCard(I18n.t('dash.card.groups'), groups.length, '👥', '', I18n.t('dash.card.groups.hint')) +
+            statCard(I18n.t('dash.card.avg'), avg.toFixed(2), '⭐', '', I18n.t('dash.card.avg.hint')) +
+            statCard(I18n.t('dash.card.perf'), perf + '%', '📈', perf >= 85 ? 'green' : perf >= 70 ? 'yellow' : 'red', I18n.t('dash.card.perf.hint')) +
+            statCard(I18n.t('dash.card.risk'), risk.length, '⚠️', risk.length ? 'red' : 'green', I18n.t('dash.card.risk.hint')) +
             '</div>' +
 
             '<div class="grid grid--2 mt-24">' +
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">Средний балл по предметам</h3>' +
-            '<p class="card__sub">Сравнение успеваемости по дисциплинам</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.chart.bySubjects') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.chart.bySubjects.sub') + '</p>' +
             '</div></div>' +
             '<div class="chart-box"><canvas id="chartSubjects"></canvas></div>' +
             '</div>' +
-
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">Динамика по семестрам</h3>' +
-            '<p class="card__sub">Изменение среднего балла</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.chart.bySemesters') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.chart.bySemesters.sub') + '</p>' +
             '</div></div>' +
             '<div class="chart-box"><canvas id="chartSemesters"></canvas></div>' +
             '</div>' +
@@ -80,16 +74,15 @@ const DashboardPage = (() => {
             '<div class="grid grid--2 mt-16">' +
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">Распределение оценок</h3>' +
-            '<p class="card__sub">Общее количество оценок по баллам</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.chart.distribution') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.chart.distribution.sub') + '</p>' +
             '</div></div>' +
             '<div class="chart-box chart-box--sm"><canvas id="chartDist"></canvas></div>' +
             '</div>' +
-
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">ТОП-5 студентов</h3>' +
-            '<p class="card__sub">Наивысший средний балл</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.chart.top5') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.chart.top5.sub') + '</p>' +
             '</div></div>' +
             '<div class="chart-box chart-box--sm"><canvas id="chartTop"></canvas></div>' +
             '</div>' +
@@ -98,21 +91,26 @@ const DashboardPage = (() => {
             '<div class="grid grid--2 mt-16">' +
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">Аналитические выводы</h3>' +
-            '<p class="card__sub">Автоматически сформировано по данным</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.insights.title') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.insights.sub') + '</p>' +
             '</div></div>' +
             '<div class="insights">' + renderInsights(avg, perf, risk, bestSubject, worstSubject, semesters) + '</div>' +
             '</div>' +
 
             '<div class="card">' +
             '<div class="card__head"><div>' +
-            '<h3 class="card__title">Последние оценки</h3>' +
-            '<p class="card__sub">Свежие записи в журнале</p>' +
+            '<h3 class="card__title">' + I18n.t('dash.recent.title') + '</h3>' +
+            '<p class="card__sub">' + I18n.t('dash.recent.sub') + '</p>' +
             '</div></div>' +
             (recent.length ?
                 '<div class="table-scroll" style="margin:-6px -20px -18px">' +
                 '<table class="data" style="min-width:480px">' +
-                '<thead><tr><th>Студент</th><th>Предмет</th><th>Оценка</th><th>Дата</th></tr></thead>' +
+                '<thead><tr>' +
+                '<th>' + I18n.t('common.student2') + '</th>' +
+                '<th>' + I18n.t('common.subject') + '</th>' +
+                '<th>' + I18n.t('common.grade') + '</th>' +
+                '<th>' + I18n.t('common.date') + '</th>' +
+                '</tr></thead>' +
                 '<tbody>' +
                 recent.map(g => {
                     const s = Store.getStudent(g.studentId);
@@ -127,7 +125,7 @@ const DashboardPage = (() => {
                 '</tbody>' +
                 '</table>' +
                 '</div>' :
-                Utils.emptyState('Оценок пока нет', 'Добавьте первую оценку на странице «Оценки».')) +
+                Utils.emptyState(I18n.t('dash.recent.empty.title'), I18n.t('dash.recent.empty.text'))) +
             '</div>' +
             '</div>';
 
@@ -140,10 +138,10 @@ const DashboardPage = (() => {
             }
             if (semesters.length) {
                 Charts.line('chartSemesters',
-                    semesters.map(s => s.semester + ' семестр'),
+                    semesters.map(s => I18n.format('dash.semesterN', { n: s.semester })),
                     semesters.map(s => s.avg));
             }
-            Charts.doughnut('chartDist', ['Отлично (5)', 'Хорошо (4)', 'Удовл. (3)', 'Неуд. (2)'], [dist[5], dist[4], dist[3], dist[2]]);
+            Charts.doughnut('chartDist', [I18n.t('chart.grade5'), I18n.t('chart.grade4'), I18n.t('chart.grade3'), I18n.t('chart.grade2')], [dist[5], dist[4], dist[3], dist[2]]);
 
             const top = Store.rating(students).slice(0, 5);
             if (top.length) {
@@ -155,17 +153,21 @@ const DashboardPage = (() => {
         }, 0);
     };
 
-    /* ---------------- ЛИЧНЫЙ КАБИНЕТ СТУДЕНТА / СТАРОСТЫ ---------------- */
+    /* ============================================================
+       ЛИЧНЫЙ КАБИНЕТ СТУДЕНТА / СТАРОСТЫ
+       ============================================================ */
     const renderStudentView = (container, user) => {
         const stats = Store.studentStats(user.studentId);
         const student = Store.getStudent(user.studentId);
 
         if (!student) {
-            container.innerHTML = Utils.emptyState('Профиль не найден', 'Обратитесь к администратору.');
+            container.innerHTML = Utils.emptyState(
+                I18n.t('my.profile.notFound'),
+                I18n.t('my.profile.notFound.text')
+            );
             return;
         }
 
-        // Динамика по семестрам
         const semMap = {};
         stats.grades.forEach(g => {
             if (!semMap[g.semester]) semMap[g.semester] = [];
@@ -174,7 +176,6 @@ const DashboardPage = (() => {
         const semKeys = Object.keys(semMap).sort((a, b) => a - b);
         const semAvg = semKeys.map(k => Utils.round(Utils.avg(semMap[k]), 2));
 
-        // Средний балл по предметам
         const subjMap = {};
         stats.grades.forEach(g => {
             if (!subjMap[g.subjectId]) subjMap[g.subjectId] = [];
@@ -196,42 +197,46 @@ const DashboardPage = (() => {
             '<h3 class="detail-head__name">' + Utils.escapeHtml(student.fullName) + '</h3>' +
             '<div class="detail-head__meta">' +
             '<span class="badge badge--gray">' + Utils.escapeHtml(student.group) + '</span>' +
-            '<span>' + student.course + ' курс</span>' +
+            '<span>' + student.course + ' ' + I18n.t('students.courseSuffix') + '</span>' +
             '<span>·</span>' +
             '<span>' + Utils.escapeHtml(student.specialty) + '</span>' +
             '</div>' +
             '</div>' +
-            '<span class="badge ' + stats.status.cls + '">' + stats.status.label + '</span>' +
+            '<span class="badge ' + stats.status.cls + '">' + I18n.t('status.' + stats.status.key) + '</span>' +
             '</div>' +
 
             '<div class="grid grid--stats mt-16">' +
-            statCard('Средний балл', stats.average.toFixed(2), '⭐', '', 'По всем оценкам') +
-            statCard('Успеваемость', stats.performance + '%', '📈', stats.performance >= 85 ? 'green' : stats.performance >= 70 ? 'yellow' : 'red', 'Оценки 3, 4, 5') +
-            statCard('Всего оценок', stats.count, '📝', '', 'Записей в журнале') +
-            statCard('Отлично', stats.byGrade[5], '🅰️', 'green', 'Оценок «5»') +
-            statCard('Хорошо', stats.byGrade[4], '🅱️', '', 'Оценок «4»') +
-            statCard('Удовлетворительно', stats.byGrade[3], '🅲', 'yellow', 'Оценок «3»') +
-            statCard('Неудовлетворительно', stats.byGrade[2], '🅳', stats.byGrade[2] ? 'red' : '', 'Оценок «2»') +
+            statCard(I18n.t('my.avg'), stats.average.toFixed(2), '⭐', '', I18n.t('my.avg.hint')) +
+            statCard(I18n.t('my.perf'), stats.performance + '%', '📈', stats.performance >= 85 ? 'green' : stats.performance >= 70 ? 'yellow' : 'red', I18n.t('my.perf.hint')) +
+            statCard(I18n.t('my.count'), stats.count, '📝', '', I18n.t('my.count.hint')) +
+            statCard(I18n.t('my.five'), stats.byGrade[5], '🅰️', 'green', I18n.t('my.five.hint')) +
+            statCard(I18n.t('my.four'), stats.byGrade[4], '🅱️', '', I18n.t('my.four.hint')) +
+            statCard(I18n.t('my.three'), stats.byGrade[3], '🅲', 'yellow', I18n.t('my.three.hint')) +
+            statCard(I18n.t('my.two'), stats.byGrade[2], '🅳', stats.byGrade[2] ? 'red' : '', I18n.t('my.two.hint')) +
             '</div>' +
 
             '<div class="grid grid--2 mt-16">' +
             '<div class="card">' +
-            '<div class="card__head"><h3 class="card__title">Динамика по семестрам</h3></div>' +
+            '<div class="card__head"><h3 class="card__title">' + I18n.t('my.chart.sem') + '</h3></div>' +
             '<div class="chart-box"><canvas id="stChartSem"></canvas></div>' +
             '</div>' +
             '<div class="card">' +
-            '<div class="card__head"><h3 class="card__title">Средний балл по предметам</h3></div>' +
+            '<div class="card__head"><h3 class="card__title">' + I18n.t('my.chart.subj') + '</h3></div>' +
             '<div class="chart-box"><canvas id="stChartSubj"></canvas></div>' +
             '</div>' +
             '</div>' +
 
-            '<h3 class="section-title">Все мои оценки</h3>' +
+            '<h3 class="section-title">' + I18n.t('my.grades.title') + '</h3>' +
             '<div class="table-wrap">' +
             (sortedGrades.length ?
                 '<div class="table-scroll">' +
                 '<table class="data">' +
                 '<thead><tr>' +
-                '<th>Предмет</th><th>Оценка</th><th>Семестр</th><th>Дата</th><th>Преподаватель</th>' +
+                '<th>' + I18n.t('common.subject') + '</th>' +
+                '<th>' + I18n.t('common.grade') + '</th>' +
+                '<th>' + I18n.t('common.semester') + '</th>' +
+                '<th>' + I18n.t('common.date') + '</th>' +
+                '<th>' + I18n.t('common.teacher2') + '</th>' +
                 '</tr></thead>' +
                 '<tbody>' +
                 sortedGrades.map(g => {
@@ -248,14 +253,14 @@ const DashboardPage = (() => {
                 '</tbody>' +
                 '</table>' +
                 '</div>' :
-                Utils.emptyState('Оценок пока нет', 'Оценки появятся здесь, когда преподаватель их выставит.')) +
+                Utils.emptyState(I18n.t('my.grades.empty'), I18n.t('my.grades.empty.text'))) +
             '</div>';
 
         setTimeout(() => {
             if (semKeys.length) {
-                Charts.line('stChartSem', semKeys.map(k => k + ' семестр'), semAvg);
+                Charts.line('stChartSem', semKeys.map(k => I18n.format('dash.semesterN', { n: k })), semAvg);
             } else {
-                Charts.line('stChartSem', ['Нет данных'], [0]);
+                Charts.line('stChartSem', [I18n.t('dash.noData')], [0]);
             }
             if (subjKeys.length) {
                 Charts.bar('stChartSubj', subjLabels, subjAvg, Charts.palette().accent, true);
@@ -263,7 +268,9 @@ const DashboardPage = (() => {
         }, 0);
     };
 
-    /* ---------------- Вспомогательные ---------------- */
+    /* ============================================================
+       Вспомогательные
+       ============================================================ */
     const statCard = (label, value, icon, tone, hint) => {
         tone = tone || '';
         hint = hint || '';
@@ -288,21 +295,21 @@ const DashboardPage = (() => {
         items.push({
             icon: '📊',
             cls: '',
-            text: 'Средний балл составляет <b>' + avg.toFixed(2) + '</b>, успеваемость — <b>' + perf + '%</b>.'
+            text: I18n.format('insight.avg', { avg: avg.toFixed(2), perf: perf })
         });
 
         if (best) {
             items.push({
                 icon: '🏆',
                 cls: 'insight--good',
-                text: 'Наиболее высокий средний результат по предмету <b>«' + Utils.escapeHtml(best.name) + '»</b> — ' + best.avg.toFixed(2) + '.'
+                text: I18n.format('insight.best', { name: Utils.escapeHtml(best.name), avg: best.avg.toFixed(2) })
             });
         }
         if (worst && best && worst.id !== best.id) {
             items.push({
                 icon: '⚠️',
                 cls: 'insight--warn',
-                text: 'Наименьший средний балл по предмету <b>«' + Utils.escapeHtml(worst.name) + '»</b> — ' + worst.avg.toFixed(2) + '.'
+                text: I18n.format('insight.worst', { name: Utils.escapeHtml(worst.name), avg: worst.avg.toFixed(2) })
             });
         }
 
@@ -310,21 +317,19 @@ const DashboardPage = (() => {
             items.push({
                 icon: '🔔',
                 cls: risk.length >= 3 ? 'insight--bad' : 'insight--warn',
-                text: '<b>' + risk.length + '</b> ' + plural(risk.length, 'студент', 'студента', 'студентов') + ' ' + plural(risk.length, 'имеет', 'имеют', 'имеют') + ' средний балл ниже 3.5 — требуется внимание.'
+                text: I18n.format('insight.risk', { n: risk.length })
             });
         } else {
-            items.push({ icon: '✅', cls: 'insight--good', text: 'Студентов со средним баллом ниже 3.5 не обнаружено.' });
+            items.push({ icon: '✅', cls: 'insight--good', text: I18n.t('insight.noRisk') });
         }
 
         if (semesters.length >= 2) {
-            const first = semesters[0].avg;
-            const last = semesters[semesters.length - 1].avg;
-            const diff = Utils.round(last - first, 2);
+            const diff = Utils.round(semesters[semesters.length - 1].avg - semesters[0].avg, 2);
             const sign = diff > 0 ? '+' : '';
             items.push({
                 icon: diff >= 0 ? '📈' : '📉',
                 cls: diff >= 0 ? 'insight--good' : 'insight--warn',
-                text: 'По сравнению с первым семестром средний балл изменился на <b>' + sign + diff.toFixed(2) + '</b>.'
+                text: I18n.format('insight.progress', { diff: sign + diff.toFixed(2) })
             });
         }
 
@@ -334,14 +339,6 @@ const DashboardPage = (() => {
             '<div>' + i.text + '</div>' +
             '</div>'
         ).join('');
-    };
-
-    const plural = (n, one, few, many) => {
-        const m10 = n % 10,
-            m100 = n % 100;
-        if (m10 === 1 && m100 !== 11) return one;
-        if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
-        return many;
     };
 
     return {
