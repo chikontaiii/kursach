@@ -1,31 +1,31 @@
 /* ============================================================
-   APP — роутер, навигация, Google-авторизация
+   APP — роутер, навигация, Google-авторизация, языки
    ============================================================ */
 (() => {
 
     const MENU = [
-        { id: 'dashboard', path: '#/dashboard', label: 'Dashboard', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'my', path: '#/my', label: 'Мой профиль', icon: '', roles: ['starosta'] },
-        { id: 'students', path: '#/students', label: 'Студенты', icon: '', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'grades', path: '#/grades', label: 'Оценки', icon: '', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'subjects', path: '#/subjects', label: 'Предметы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'groups', path: '#/groups', label: 'Группы', icon: '', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'rating', path: '#/rating', label: 'Рейтинг', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] },
-        { id: 'analytics', path: '#/analytics', label: 'Аналитика', icon: '', roles: ['admin', 'teacher', 'starosta'] },
-        { id: 'settings', path: '#/settings', label: 'Настройки', icon: '', roles: ['admin', 'teacher', 'starosta', 'student'] }
+        { id: 'dashboard', path: '#/dashboard', labelKey: 'menu.dashboard', icon: '📊', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'my', path: '#/my', labelKey: 'menu.my', icon: '👤', roles: ['starosta'] },
+        { id: 'students', path: '#/students', labelKey: 'menu.students', icon: '👨‍🎓', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'grades', path: '#/grades', labelKey: 'menu.grades', icon: '📝', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'subjects', path: '#/subjects', labelKey: 'menu.subjects', icon: '📚', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'groups', path: '#/groups', labelKey: 'menu.groups', icon: '👥', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'rating', path: '#/rating', labelKey: 'menu.rating', icon: '🏆', roles: ['admin', 'teacher', 'starosta', 'student'] },
+        { id: 'analytics', path: '#/analytics', labelKey: 'menu.analytics', icon: '📈', roles: ['admin', 'teacher', 'starosta'] },
+        { id: 'settings', path: '#/settings', labelKey: 'menu.settings', icon: '⚙️', roles: ['admin', 'teacher', 'starosta', 'student'] }
     ];
 
     const ROUTES = {
-        dashboard: { title: 'Dashboard', subtitle: 'Обзор успеваемости группы', render: (c) => DashboardPage.render(c) },
-        my: { title: 'Мой профиль', subtitle: 'Личные показатели успеваемости', render: (c) => DashboardPage.renderStudentView(c, Store.getCurrentUser()) },
-        students: { title: 'Студенты', subtitle: 'Список всех студентов', render: (c) => StudentsPage.render(c) },
-        student: { title: 'Профиль студента', subtitle: 'Детальная информация', render: (c, id) => StudentPage.render(c, id) },
-        grades: { title: 'Оценки', subtitle: 'Журнал оценок', render: (c) => GradesPage.render(c) },
-        subjects: { title: 'Предметы', subtitle: 'Статистика по дисциплинам', render: (c) => SubjectsPage.render(c) },
-        groups: { title: 'Группы', subtitle: 'Учебные группы колледжа', render: (c) => GroupsPage.render(c) },
-        rating: { title: 'Рейтинг', subtitle: 'Автоматический рейтинг студентов', render: (c) => RatingPage.render(c) },
-        analytics: { title: 'Аналитика', subtitle: 'Гибкие срезы данных', render: (c) => AnalyticsPage.render(c) },
-        settings: { title: 'Настройки', subtitle: 'Профиль и оформление', render: (c) => SettingsPage.render(c) }
+        dashboard: { titleKey: 'page.dashboard.title', subtitleKey: 'page.dashboard.subtitle', render: (c) => DashboardPage.render(c) },
+        my: { titleKey: 'page.my.title', subtitleKey: 'page.my.subtitle', render: (c) => DashboardPage.renderStudentView(c, Store.getCurrentUser()) },
+        students: { titleKey: 'page.students.title', subtitleKey: 'page.students.subtitle', render: (c) => StudentsPage.render(c) },
+        student: { titleKey: 'page.student.title', subtitleKey: 'page.student.subtitle', render: (c, id) => StudentPage.render(c, id) },
+        grades: { titleKey: 'page.grades.title', subtitleKey: 'page.grades.subtitle', render: (c) => GradesPage.render(c) },
+        subjects: { titleKey: 'page.subjects.title', subtitleKey: 'page.subjects.subtitle', render: (c) => SubjectsPage.render(c) },
+        groups: { titleKey: 'page.groups.title', subtitleKey: 'page.groups.subtitle', render: (c) => GroupsPage.render(c) },
+        rating: { titleKey: 'page.rating.title', subtitleKey: 'page.rating.subtitle', render: (c) => RatingPage.render(c) },
+        analytics: { titleKey: 'page.analytics.title', subtitleKey: 'page.analytics.subtitle', render: (c) => AnalyticsPage.render(c) },
+        settings: { titleKey: 'page.settings.title', subtitleKey: 'page.settings.subtitle', render: (c) => SettingsPage.render(c) }
     };
 
     const $ = Utils.$;
@@ -85,7 +85,7 @@
             const name = fbUser.displayName || fbUser.email;
             const user = Store.upsertUser({ name: name, email: fbUser.email, role: autoRole });
             Store.setUserMapping(fbUser.uid, { name: name, role: autoRole });
-            Utils.toast('Добро пожаловать, ' + name + '!', 'success');
+            Utils.toast(I18n.t('common.welcome') + ', ' + name + '!', 'success');
             enterApp(user);
             return;
         }
@@ -93,7 +93,7 @@
         openRegistration(fbUser);
     };
 
-    /* ---------------- Регистрация (ввод ФИО + выбор группы) ---------------- */
+    /* ---------------- Регистрация (ФИО + выбор группы) ---------------- */
     const openRegistration = (fbUser) => {
         showRegister();
         $('#regEmail').textContent = fbUser.email || '';
@@ -104,7 +104,7 @@
         const groupSelect = $('#regGroup');
         let matchedStudent = null;
 
-        // Заполняем список групп из базы
+        // Заполняем группы
         const groups = Store.getGroups();
         groupSelect.innerHTML = '<option value="">— выберите группу —</option>' +
             groups.map(g =>
@@ -113,7 +113,7 @@
                 '</option>'
             ).join('');
 
-        // Сброс состояния
+        // Сброс
         input.value = '';
         matchBox.innerHTML = '';
         groupWrap.hidden = true;
@@ -134,7 +134,7 @@
                 .filter(s => s.fullName.toLowerCase().indexOf(q) !== -1)
                 .slice(0, 5);
 
-            // Нет совпадений — сразу предлагаем выбрать группу
+            // Нет совпадений — предлагаем выбрать группу
             if (matches.length === 0) {
                 matchBox.innerHTML =
                     '<div class="insight" style="padding:10px 12px;font-size:12.5px">' +
@@ -160,7 +160,6 @@
                 '➕ Меня нет в списке — создать новый профиль' +
                 '</button>';
 
-            // Клик по подсказке
             matchBox.querySelectorAll('[data-id]').forEach(btn => {
                 btn.onclick = () => {
                     matchedStudent = Store.getStudent(btn.dataset.id);
@@ -175,7 +174,6 @@
                 };
             });
 
-            // Кнопка "Меня нет в списке"
             const newBtn = $('#regNewProfile');
             if (newBtn) {
                 newBtn.onclick = () => {
@@ -204,14 +202,12 @@
 
             let student = matchedStudent;
 
-            // Если не выбрали из подсказок — ищем точное совпадение
             if (!student) {
                 student = Store.getStudents().find(s =>
                     s.fullName.toLowerCase() === name.toLowerCase()
                 );
             }
 
-            // Если не нашли — создаём нового (нужна группа)
             if (!student) {
                 const groupId = groupSelect.value;
                 if (!groupId) {
@@ -255,7 +251,7 @@
 
             const greeting = role === 'starosta' ?
                 'Добро пожаловать, староста ' + student.fullName + '!' :
-                'Добро пожаловать, ' + student.fullName + '!';
+                I18n.t('common.welcome') + ', ' + student.fullName + '!';
             Utils.toast(greeting, 'success');
             enterApp(user);
         };
@@ -294,7 +290,7 @@
         nav.innerHTML = items.map(m =>
             '<button class="nav__item" data-path="' + m.path + '" data-id="' + m.id + '" type="button">' +
             '<span class="nav__icon">' + m.icon + '</span>' +
-            '<span>' + m.label + '</span>' +
+            '<span>' + I18n.t(m.labelKey) + '</span>' +
             '</button>'
         ).join('');
     };
@@ -312,31 +308,61 @@
         });
     };
 
-    const openSidebar = () => {
-        sidebar.classList.add('sidebar--open');
-        overlay.classList.add('overlay--on');
-    };
-    const closeSidebar = () => {
-        sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('overlay--on');
-    };
+    const openSidebar = () => { sidebar.classList.add('sidebar--open');
+        overlay.classList.add('overlay--on'); };
+    const closeSidebar = () => { sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('overlay--on'); };
     burger.addEventListener('click', openSidebar);
     overlay.addEventListener('click', closeSidebar);
     window.addEventListener('resize', () => { if (window.innerWidth > 860) closeSidebar(); });
 
     const renderUserBox = (user) => {
-        const roleLabels = {
-            admin: 'Администратор',
-            teacher: 'Преподаватель',
-            starosta: 'Староста',
-            student: 'Студент'
-        };
+        const roleKey = 'common.' + user.role;
         userBox.innerHTML =
             '<div class="user-box__avatar">' + Utils.initials(user.name) + '</div>' +
             '<div class="user-box__info">' +
             '<div class="user-box__name">' + Utils.escapeHtml(user.name) + '</div>' +
-            '<div class="user-box__role">' + (roleLabels[user.role] || user.role) + '</div>' +
+            '<div class="user-box__role">' + I18n.t(roleKey, user.role) + '</div>' +
             '</div>';
+    };
+
+    /* ---------------- Переключатель языков ---------------- */
+    const buildLangSwitcher = () => {
+        if (document.getElementById('langSwitcher')) return;
+
+        const switcher = document.createElement('div');
+        switcher.id = 'langSwitcher';
+        switcher.className = 'lang-switcher';
+
+        const labels = { ru: 'RU', kg: 'KG', en: 'EN' };
+        const current = I18n.getLang();
+
+        switcher.innerHTML = I18n.languages.map(lang =>
+            '<button type="button" class="lang-btn' + (lang === current ? ' lang-btn--active' : '') + '" data-lang="' + lang + '">' +
+            labels[lang] +
+            '</button>'
+        ).join('');
+
+        switcher.addEventListener('click', (e) => {
+            const btn = e.target.closest('.lang-btn');
+            if (!btn) return;
+            const lang = btn.dataset.lang;
+            if (lang === I18n.getLang()) return;
+            I18n.setLang(lang);
+
+            switcher.querySelectorAll('.lang-btn').forEach(b => {
+                b.classList.toggle('lang-btn--active', b.dataset.lang === lang);
+            });
+        });
+
+        // Вставляем в топбар
+        const topbarActions = document.getElementById('topbarActions');
+        const topbar = document.querySelector('.topbar');
+        if (topbarActions && topbarActions.parentNode) {
+            topbarActions.parentNode.insertBefore(switcher, topbarActions);
+        } else if (topbar) {
+            topbar.appendChild(switcher);
+        }
     };
 
     /* ---------------- Роутер ---------------- */
@@ -350,26 +376,26 @@
         const user = Store.getCurrentUser();
         if (!user) return;
 
-        const parsed = parseRoute();
+        const parsed = parseHash();
         const route = parsed.route;
         const param = parsed.param;
         const config = ROUTES[route];
 
         if (!config) {
-            page.innerHTML = Utils.emptyState('Страница не найдена', 'Проверьте адрес в строке браузера.', '🚫');
+            page.innerHTML = Utils.emptyState('Страница не найдена', 'Проверьте адрес в браузере.', '🚫');
             return;
         }
 
         const menuItem = MENU.find(m => m.id === route);
         if (menuItem && menuItem.roles.indexOf(user.role) === -1) {
-            page.innerHTML = Utils.emptyState('Доступ запрещён', 'У вашей роли нет прав для этого раздела.', '🔒');
+            page.innerHTML = Utils.emptyState('Доступ запрещён', 'У вашей роли нет прав.', '🔒');
             return;
         }
 
         topbarActions.innerHTML = '';
         Charts.destroyAll();
-        pageTitle.textContent = config.title;
-        pageSubtitle.textContent = config.subtitle;
+        pageTitle.textContent = I18n.t(config.titleKey);
+        pageSubtitle.textContent = I18n.t(config.subtitleKey);
         setActiveNav(menuItem ? menuItem.id : 'dashboard');
 
         try {
@@ -380,9 +406,6 @@
         }
     };
 
-    // Обёртка (защита от опечатки в предыдущем варианте)
-    const parseRoute = () => parseHash();
-
     window.addEventListener('hashchange', renderRoute);
 
     const enterApp = (user) => {
@@ -392,6 +415,7 @@
 
         const theme = localStorage.getItem('sa_theme') || 'light';
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('lang', I18n.getLang());
 
         if (!location.hash) location.hash = '#/dashboard';
         renderRoute();
@@ -399,6 +423,19 @@
 
     /* ---------------- Инициализация ---------------- */
     const init = () => {
+        // Переключатель языков
+        buildLangSwitcher();
+
+        // Реакция на смену языка
+        window.addEventListener('langchange', () => {
+            const user = Store.getCurrentUser();
+            if (user) {
+                buildNav(user);
+                renderUserBox(user);
+                renderRoute();
+            }
+        });
+
         $('#googleLoginBtn').addEventListener('click', async() => {
             if (!FirebaseService.isConfigured()) {
                 $('#loginError').textContent = 'Firebase не настроен. Проверьте js/firebase.js';
@@ -422,7 +459,7 @@
         }
 
         loginScreen.hidden = false;
-        $('#loginError').textContent = 'Загрузка данных из облака…';
+        $('#loginError').textContent = I18n.t('common.loading');
         $('#loginError').hidden = false;
 
         Store.load().then(() => {
