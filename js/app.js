@@ -93,22 +93,37 @@
         openRegistration(fbUser);
     };
 
-    /* ---------------- Регистрация (ввод ФИО) ---------------- */
+    /* ---------------- Регистрация (ввод ФИО + выбор группы) ---------------- */
     const openRegistration = (fbUser) => {
         showRegister();
         $('#regEmail').textContent = fbUser.email || '';
 
         const input = $('#regName');
         const matchBox = $('#regMatch');
+        const groupWrap = $('#regGroupWrap');
+        const groupSelect = $('#regGroup');
         let matchedStudent = null;
 
+        // Заполняем список групп из базы
+        const groups = Store.getGroups();
+        groupSelect.innerHTML = '<option value="">— выберите группу —</option>' +
+            groups.map(g =>
+                '<option value="' + g.id + '">' +
+                Utils.escapeHtml(g.name) + ' (' + g.course + ' курс)' +
+                '</option>'
+            ).join('');
+
+        // Сброс состояния
         input.value = '';
         matchBox.innerHTML = '';
+        groupWrap.hidden = true;
+        groupSelect.value = '';
         matchedStudent = null;
 
         input.oninput = () => {
             const q = input.value.trim().toLowerCase();
             matchedStudent = null;
+            groupWrap.hidden = true;
 
             if (q.length < 2) {
                 matchBox.innerHTML = '';
@@ -119,15 +134,18 @@
                 .filter(s => s.fullName.toLowerCase().indexOf(q) !== -1)
                 .slice(0, 5);
 
+            // Нет совпадений — сразу предлагаем выбрать группу
             if (matches.length === 0) {
                 matchBox.innerHTML =
                     '<div class="insight" style="padding:10px 12px;font-size:12.5px">' +
                     '<div class="insight__icon">+</div>' +
-                    '<div>Совпадений нет. Проверьте написание ФИО или обратитесь к администратору.</div>' +
+                    '<div>Совпадений нет. Выберите группу ниже — будет создан <b>новый профиль</b>.</div>' +
                     '</div>';
+                groupWrap.hidden = false;
                 return;
             }
 
+            // Есть совпадения
             matchBox.innerHTML =
                 '<div style="font-size:12px;color:var(--text-3);margin:0 0 8px">' +
                 'Найдены совпадения — нажмите, если это вы:' +
@@ -137,12 +155,17 @@
                     '<span>' + Utils.escapeHtml(s.fullName) + '</span>' +
                     '<span class="demo-btn__role">' + Utils.escapeHtml(s.group) + '</span>' +
                     '</button>'
-                ).join('');
+                ).join('') +
+                '<button type="button" class="btn btn--ghost btn--sm" id="regNewProfile" style="width:100%;margin-top:6px">' +
+                '➕ Меня нет в списке — создать новый профиль' +
+                '</button>';
 
+            // Клик по подсказке
             matchBox.querySelectorAll('[data-id]').forEach(btn => {
                 btn.onclick = () => {
                     matchedStudent = Store.getStudent(btn.dataset.id);
                     input.value = matchedStudent.fullName;
+                    groupWrap.hidden = true;
                     matchBox.innerHTML =
                         '<div class="insight insight--good">' +
                         '<div class="insight__icon">✓</div>' +
@@ -151,6 +174,20 @@
                         '</div>';
                 };
             });
+
+            // Кнопка "Меня нет в списке"
+            const newBtn = $('#regNewProfile');
+            if (newBtn) {
+                newBtn.onclick = () => {
+                    matchedStudent = null;
+                    groupWrap.hidden = false;
+                    matchBox.innerHTML =
+                        '<div class="insight">' +
+                        '<div class="insight__icon">+</div>' +
+                        '<div>Будет создан новый профиль. Выберите группу ниже.</div>' +
+                        '</div>';
+                };
+            }
         };
 
         $('#regCancel').onclick = async() => {
@@ -167,15 +204,38 @@
 
             let student = matchedStudent;
 
+            // Если не выбрали из подсказок — ищем точное совпадение
             if (!student) {
                 student = Store.getStudents().find(s =>
                     s.fullName.toLowerCase() === name.toLowerCase()
                 );
             }
 
+            // Если не нашли — создаём нового (нужна группа)
             if (!student) {
-                Utils.toast('Студент с таким ФИО не найден. Обратитесь к администратору.', 'error');
-                return;
+                const groupId = groupSelect.value;
+                if (!groupId) {
+                    Utils.toast('Выберите группу', 'warn');
+                    groupWrap.hidden = false;
+                    groupSelect.focus();
+                    return;
+                }
+
+                const group = Store.getGroup(groupId);
+                if (!group) {
+                    Utils.toast('Группа не найдена', 'error');
+                    return;
+                }
+
+                student = Store.addStudent({
+                    fullName: name,
+                    group: group.name,
+                    course: group.course,
+                    specialty: group.specialty,
+                    isStarosta: false
+                });
+
+                Utils.toast('Создан новый профиль в группе ' + group.name, 'info');
             }
 
             const role = student.isStarosta ? 'starosta' : 'student';
@@ -290,7 +350,7 @@
         const user = Store.getCurrentUser();
         if (!user) return;
 
-        const parsed = parseHash();
+        const parsed = parseRoute();
         const route = parsed.route;
         const param = parsed.param;
         const config = ROUTES[route];
@@ -319,6 +379,9 @@
             page.innerHTML = Utils.emptyState('Ошибка отрисовки', err.message, '⚠️');
         }
     };
+
+    // Обёртка (защита от опечатки в предыдущем варианте)
+    const parseRoute = () => parseHash();
 
     window.addEventListener('hashchange', renderRoute);
 
@@ -358,12 +421,10 @@
             return;
         }
 
-        // Показываем индикатор загрузки
         loginScreen.hidden = false;
         $('#loginError').textContent = 'Загрузка данных из облака…';
         $('#loginError').hidden = false;
 
-        // Асинхронная загрузка данных из Firestore
         Store.load().then(() => {
             $('#loginError').hidden = true;
             FirebaseService.onAuthChanged(handleFirebaseUser);
@@ -371,7 +432,6 @@
             console.error('Ошибка загрузки данных:', err);
             $('#loginError').textContent = 'Ошибка загрузки: ' + err.message;
             $('#loginError').hidden = false;
-            // Всё равно подключаем обработчик auth
             FirebaseService.onAuthChanged(handleFirebaseUser);
         });
     };

@@ -56,15 +56,22 @@
             </div>
 
             <p style="font-size:13.5px;color:var(--text-2);margin:0 0 18px;line-height:1.5">
-                Введите своё ФИО. Если вы уже есть в списке — система найдёт вас автоматически, иначе создаст новый профиль.
+                Введите своё ФИО. Если вы уже есть в списке — система найдёт вас автоматически.
             </p>
 
             <label class="field">
-                <span class="field__label">ФИО</span>
-                <input class="input" id="regName" type="text" placeholder="Например: Иванов Иван" autocomplete="name">
-            </label>
+            <span class="field__label">ФИО</span>
+            <input class="input" id="regName" type="text" placeholder="Например: Иванов Иван" autocomplete="name">
+        </label>
 
             <div id="regMatch" style="margin-top:12px"></div>
+
+            <label class="field" id="regGroupWrap" hidden style="margin-top:14px">
+            <span class="field__label">Выберите группу</span>
+            <select class="select" id="regGroup">
+                <option value="">— выберите группу —</option>
+            </select>
+        </label>
 
             <div style="display:flex;gap:8px;margin-top:20px">
                 <button class="btn btn--ghost" id="regCancel" type="button">Отмена</button>
